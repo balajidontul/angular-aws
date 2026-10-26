@@ -1,0 +1,31 @@
+platform: linux
+
+image_resource:
+  type: registry-image
+  source:
+    repository: node
+    tag: "22"
+
+inputs:
+  - name: source
+
+outputs:
+  - name: artifact
+
+run:
+  path: sh
+  args:
+    - -exc
+    - |
+      cd source
+
+      echo "Installing dependencies..."
+      npm ci
+
+      echo "Building Angular..."
+      npx ng build --configuration production
+
+      echo "Copying build artifact..."
+      cp -R dist/* ../artifact/
+
+      echo "Angular build successful"
